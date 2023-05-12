@@ -17,7 +17,7 @@ _current_program = None
 def _curr():
     """ Returns the EvaProgram that is currently in context """
     global _current_program
-    if _current_program == None:
+    if _current_program is None:
         raise RuntimeError("No Program in context")
     return _current_program
 
@@ -32,7 +32,7 @@ def _py_to_term(x, program):
     elif isinstance(x, Term):
         return x
     else:
-        raise TypeError("No conversion to Term available for " + str(x))
+        raise TypeError(f"No conversion to Term available for {str(x)}")
 
 def py_to_eva(x, program = None):
     """ Maps supported types into EVA terms. May be used in library functions
@@ -49,10 +49,9 @@ def py_to_eva(x, program = None):
         """
     if isinstance(x, Expr):
         return x
-    else:
-        if program == None:
-            program = _curr()
-        return Expr(_py_to_term(x, program), program)
+    if program is None:
+        program = _curr()
+    return Expr(_py_to_term(x, program), program)
 
 class Expr():
     """ Wrapper for EVA's native Term class. Provides operator overloads that
@@ -97,9 +96,9 @@ class Expr():
     def __pow__(self,exponent):
         """ Create exponentiation as nested multiplication terms """
         if exponent < 1:
-            raise ValueError("exponent must be greater than zero, got " + exponent)
+            raise ValueError(f"exponent must be greater than zero, got {exponent}")
         result = self.term
-        for i in range(exponent-1):
+        for _ in range(exponent-1):
             result = self.program._make_term(Op.Mul, [result, self.term])
         return Expr(result, self.program)
 
@@ -134,9 +133,10 @@ class EvaProgram(Program):
 
     def __enter__(self):
         global _current_program
-        if _current_program != None:
+        if _current_program is None:
+            _current_program = self
+        else:
             raise RuntimeError("There is already an EVA Program in context")
-        _current_program = self
     
     def __exit__(self, exc_type, exc_value, exc_traceback):
         global _current_program

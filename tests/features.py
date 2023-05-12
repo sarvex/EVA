@@ -46,7 +46,7 @@ class Features(EvaTestCase):
         """ Test all rotations """
 
         for rotOp in [lambda x, r: x << r, lambda x, r: x >> r]:
-            for enc in [False, True]:
+            for _ in [False, True]:
                 for rot in range(-2,2):
                     prog = EvaProgram('RotOp', vec_size = 8)
                     with prog:
@@ -162,9 +162,7 @@ class Features(EvaTestCase):
         poly.set_output_ranges(20)
         poly.set_input_scales(30)
 
-        inputs = {
-            'x': [i for i in range(poly.vec_size)]
-        }
+        inputs = {'x': list(range(poly.vec_size))}
         reference = evaluate(poly, inputs)
 
         compiler = CKKSCompiler(config={'warn_vec_size':'false'})

@@ -41,9 +41,7 @@ print('Runtime on client')
 signature = load('poly.evasignature')
 public_ctx = load('poly.sealpublic')
 
-inputs = {
-    'x': [i for i in range(signature.vec_size)]
-}
+inputs = {'x': list(range(signature.vec_size))}
 encInputs = public_ctx.encrypt(inputs, signature)
 
 save(encInputs, 'poly_inputs.sealvals')

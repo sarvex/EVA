@@ -13,7 +13,5 @@ def valuation_mse(a,b):
         """
     if set(a.keys()) != set(b.keys()):
         raise ValueError("Valuations must have the same keys")
-    mse = 0
-    for k in a.keys():
-        mse += _np.mean((_np.array(a[k]) - _np.array(b[k]))**2)
+    mse = sum(_np.mean((_np.array(a[k]) - _np.array(b[k]))**2) for k in a.keys())
     return mse / len(a)

@@ -10,7 +10,7 @@ from eva.metric import valuation_mse
 
 class EvaTestCase(unittest.TestCase):
     def assert_compiles_and_matches_reference(self, prog, inputs = None, config={}):
-        if inputs == None:
+        if inputs is None:
             inputs = { name: [uniform(-2,2) for _ in range(prog.vec_size)]
                 for name in prog.inputs }
         config['warn_vec_size'] = 'false'

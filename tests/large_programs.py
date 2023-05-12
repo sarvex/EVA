@@ -90,7 +90,7 @@ class LargePrograms(EvaTestCase):
             y = e + b0
             for i in range(p):
                 x_i = x
-                for j in range(i):
+                for _ in range(i):
                     x_i = x_i * x
                 t = x_i * b[i]
                 y += t
@@ -113,9 +113,9 @@ class LargePrograms(EvaTestCase):
             x = [Input(f'x{i}') for i in range(p)]
             e = [Input(f'e{j}') for j in range(k)]
             b0 = [j * 0.56 for j in range(k)]
-            b = [[k * i * 0.732 for i in range(p)] for j in range(k)]
+            b = [[k * i * 0.732 for i in range(p)] for _ in range(k)]
 
-            y = [0 for j in range(k)]
+            y = [0 for _ in range(k)]
             for j in range(k):
                 y[j] = e[j] + b0[j]
                 for i in range(p):
@@ -128,12 +128,13 @@ class LargePrograms(EvaTestCase):
         multireg.set_input_scales(40)
         multireg.set_output_ranges(30)
 
-        multireg_inputs = {}
-        for i in range(p):
-            multireg_inputs[f'x{i}'] = [i * j * 0.01 for j in range(multireg.vec_size)]
+        multireg_inputs = {
+            f'x{i}': [i * j * 0.01 for j in range(multireg.vec_size)]
+            for i in range(p)
+        }
         for j in range(k):
             multireg_inputs[f'e{j}'] = [(multireg.vec_size - i) * j * 0.001 for i in range(multireg.vec_size)]
-            
+
         compiler = CKKSCompiler(config={'warn_vec_size':'false'})
 
         for prog, inputs in [(linreg, linreg_inputs), (polyreg, polyreg_inputs), (multireg, multireg_inputs)]:

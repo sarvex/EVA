@@ -106,7 +106,7 @@ def read_input_image():
 
 def write_output_image(outputs, tag):
     enc_result_image = Image.new('L', (w, h))
-    enc_result_image.putdata([x * 255.0 for x in outputs['image'][0:h*w]])
+    enc_result_image.putdata([x * 255.0 for x in outputs['image'][:h*w]])
     enc_result_image.save(f'baboon_{tag}.png', "PNG")
 
 if __name__ == "__main__":
